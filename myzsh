@@ -1,0 +1,54 @@
+# --------------- custom -------------------
+
+# --------------- functions ----------------
+function iplookup() {
+    http "http://api.ipstack.com/$1?access_key=a0d72723de46291aa32c1a795655c6c8"
+}
+
+function jwt-decode() {
+  sed 's/\./\n/g' <<< $(cut -d. -f1,2 <<< $1) | base64 --decode | jq
+}
+
+function passwordgen() {
+  ((test -n "$1" && test "$1" -ge 0) && \
+    openssl rand -base64 $1 | colrm $(expr $1 + 1)) 2>&-;
+};
+
+function uuidgen() {
+  /usr/bin/uuidgen | awk '{print tolower($0)}'
+}
+
+# --------------- alias -------------------------
+alias grep='grep  --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
+alias vim="nvim"
+alias vi="nvim"
+alias black="black -S -t py36 -l 90"
+alias randStr='openssl rand -base64'
+
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# ------------- pyenv ----------------------------
+eval "$(pyenv init -)"
+# ------------------------------------------------
+
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+export PYTHONIOENCODING=UTF-8
+
+
+# ------------ Go enviroment config ---------------
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$PATH
+export GO111MODULE=on
+
+export PYTHONSTARTUP=~/.pythonstartup
+export LDFLAGS="-L/usr/local/opt/readline/lib"
+export CPPFLAGS="-I/usr/local/opt/readline/include"
+export PKG_CONFIG_PATH="/usr/local/opt/readline/lib/pkgconfig"
+
+# ------------ brew ---------------------
+export PATH="/usr/local/sbin:$PATH"
+. "/Users/knight/.acme.sh/acme.sh.env"
